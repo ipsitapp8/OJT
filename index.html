@@ -3,37 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Knowledge Graph Builder</title>
+    <title>Knowledge Graph</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <h1> Knowledge Graph </h1>
-    <input type="text" id="search-box" placeholder="Search pages...">
-    <button id="export">Export</button>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">🔗 Knowledge Graph</div>
+    <input type="text" class="search" placeholder="Search pages...">
+
+    <div class="nav-actions">
+        <button class="export-btn">⬇ Export</button>
+        <button class="theme-btn">🌙</button>
     </div>
-    <div class="left-box">
-        <p>UPLOAD FILES</p>
-        <br>
-        <div class="browse-box">
-            Drop Markdown files here <span>or </span><span><a href=""class="browse-link">click to browse</a></span>
+</header>
+    
+<!-- MAIN LAYOUT -->
+<div class="container">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+
+        <!-- Upload Box -->
+        <div class="upload-box">
+            <div class="upload-icon">⤓</div>
+            <p>Drop markdown files here<br><span>or click to browse</span></p>
+            <button class="file-types">.md, .markdown</button>
         </div>
-        <br>
-        <div class="statistics">
-            <p>STATISTICS</p>
-            <br>
-            <div class="stats-content">
-                <div class="stat-box">Total Pages: 0</div>
-                <div class="stat-box">Total Links: 0</div>
-                <div class="stat-box">Avg <br>Connections: 0</div>
-                <div class="stat-box">Orphan Pages: 0</div>
+
+        <!-- Statistics -->
+        <h3 class="section-title">STATISTICS</h3>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>TOTAL PAGES</h4>
+                <p class="stat-value">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h4>TOTAL LINKS</h4>
+                <p class="stat-value">0</p>
+            </div>
+
+            <div class="stat-card">
+                <h4>AVG CONNECTIONS</h4>
+                <p class="stat-value">0.0</p>
+            </div>
+
+            <div class="stat-card">
+                <h4>ORPHAN PAGES</h4>
+                <p class="stat-value">0</p>
             </div>
         </div>
-        <br>
-        <p>PAGES</p>
+
+        <!-- Pages -->
+        <h3 class="section-title">PAGES (0)</h3>
+        <p class="pages-placeholder">Upload markdown files to get started</p>
+
     </div>
-    <div class="right-box"></div>
-    
-    
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+
+        <div class="graph-placeholder">
+            <div class="graph-icon">📊</div>
+            <h2>No Graph Data Yet</h2>
+            <p>Upload markdown files to visualize your knowledge graph</p>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="navs-section">
+
+            <div class="top-navs">
+                <button class="analysis">📈 Analysis</button>
+                <button>⚠ Validation <span class="count">0</span></button>
+            </div>
+
+            <div class="bottom-navs">
+                <button class="orphans">📄 Orphans <span class="count">0</span></button>
+                <button>⭐ Hubs <span class="count">0</span></button>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>
