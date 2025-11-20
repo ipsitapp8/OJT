@@ -7,14 +7,14 @@
 
 body {
     background: #f5f7fa;
-    color: #333;
+    color: #a9caeb;
 }
 
 /* NAVBAR */
 .navbar {
     height: 70px;
     padding: 0 20px;
-    background: white;
+    background: rgb(3, 13, 40);
     border-bottom: 1px solid #ddd;
     display: flex;
     align-items: center;
@@ -31,8 +31,10 @@ body {
 .search {
     flex: 2;
     padding: 10px 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     border-radius: 6px;
+    background-color: #a9caeb;
+    
 }
 
 /*Nav bar buttons */
@@ -40,7 +42,7 @@ body {
     padding: 8px 14px;
     border: none;
     border-radius: 6px;
-    background: #eee;
+    background: #a9caeb;
     cursor: pointer;
 }
 
@@ -66,7 +68,7 @@ body {
 /* SIDEBAR */
 .sidebar {
     width: 300px;
-    background: #fff;
+    background: #e8f1fb;
     padding: 20px;
     border-right: 1px solid #ddd;
     overflow-y: auto;
@@ -81,7 +83,7 @@ body {
 
 /* Upload Box */
 .upload-box {
-    border: 2px dashed #cfd6dd;
+    border: 2px dashed #70a0d3;
     height: 180px;
     border-radius: 12px;
     text-align: center;
@@ -99,14 +101,23 @@ body {
     color: #888;
 }
 
+.upload-box:hover {
+    background: #cad6e3;
+}
+
 /* Upload Box */
 .file-types {
     margin-top: 10px;
     padding: 5px 10px;
-    border: none;
-    background: #edf2ff;
+    border: 1px solid #70a0d3;
+    background: #a9caeb;
     border-radius: 6px;
     font-size: 12px;
+    
+}
+
+.file-types:hover {
+    background: #d0e7fb;
 }
 
 /* Stats Cards */
@@ -117,10 +128,19 @@ body {
 }
 
 .stat-card {
-    background: #fafafa;
+    background: #a9caeb;
     padding: 15px;
     border-radius: 10px;
-    border: 1px solid #eee;
+    border: 1px solid #70a0d3;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1) ;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color:rgb(66, 68, 73)
+}
+
+.stat-card:hover {
+    background: #d0e7fb;
+    transform: scale(1.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15)     ;
 }
 
 .stat-card h4 {
@@ -173,7 +193,7 @@ body {
     display:inline;
     padding: 8px 15px;
     border: 1px solid #ccc;
-    background: #fff;
+    background: #a9caeb;
     cursor: pointer;
     border-radius: 6px;
     margin-right: 5px;
@@ -183,12 +203,14 @@ body {
 .top-navs,
 .bottom-navs {
     display:flex;
-    background: #e8ecf2;
+    background: #e8f1fb;
     padding: 4px;
     border-radius: 8px;
     border: 1px solid #d0d5dd;
     font-family: Arial, sans-serif;
 }
+
+
 
 /* Tabs */
 .analysis {
