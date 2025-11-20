@@ -107,7 +107,7 @@ body {
     background: #cad6e3;
 }
 
-/* Upload Box */
+/* Uploaded Files */
 .file-types {
     margin-top: 10px;
     padding: 5px 10px;
@@ -131,6 +131,7 @@ body {
     font-family: Arial;
     font-size: 14px;
     color: #080f25;
+   
 }
 
 /* Stats Cards */
