@@ -7,7 +7,7 @@
 
 body {
     background: #f5f7fa;
-    color: #a9caeb;
+    
 }
 
 /* NAVBAR */
@@ -19,12 +19,14 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap;
 }
  
 /*LOGO */
 .logo {
     font-size: 37px;
     font-weight: bold;
+    color:#a9caeb;
 }
 
 /* Search bar */
@@ -120,6 +122,17 @@ body {
     background: #d0e7fb;
 }
 
+.upload-box input {
+    display: none;
+}
+
+#fileList {
+    margin-top: 15px;
+    font-family: Arial;
+    font-size: 14px;
+    color: #080f25;
+}
+
 /* Stats Cards */
 .stats-grid {
     display: grid;
@@ -169,7 +182,7 @@ body {
 }
 
 /* Graph placeholder */
-.graph-placeholder {
+.graph-placeholder  {
     text-align: center;
     justify-content: center;
     align-content: center;
@@ -179,9 +192,12 @@ body {
 }
 
 .graph-icon {
+    
     font-size: 40px;
     margin-bottom: 10px;
 }
+
+
 
 /* Tabs */
 .navs-section {
