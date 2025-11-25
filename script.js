@@ -31,7 +31,7 @@ fileInput.addEventListener('dragleave',()=>{
 droparea.addEventListener("drop",(e)=>{
     const files = e.dataTransfer.files;
     handleFiles(files);
-    droparea.style.background="#f5f9ff";
+    droparea.style.background="#e8f0ff";
 });
 
 //Function to handle files

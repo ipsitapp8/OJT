@@ -131,7 +131,8 @@ body {
     font-family: Arial;
     font-size: 14px;
     color: #080f25;
-   
+    height:20px;
+    width: auto;
 }
 
 /* Stats Cards */
@@ -179,8 +180,9 @@ body {
 .main-content {
     flex: 1;
     padding: 30px;
-    overflow-y: auto;
 }
+    /* overflow-y: auto;
+} 
 
 /* Graph placeholder */
 .graph-placeholder  {
