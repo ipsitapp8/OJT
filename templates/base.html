@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Knowledge Graph</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Vis.js for Graph -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    
+    <!-- Chart.js for Stats -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-circle-nodes"></i>
+            <span>KnowledgeGraph</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">Home</a>
+            <a href="{{ url_for('upload_notes') }}" class="nav-link {% if request.endpoint == 'upload_notes' %}active{% endif %}">Upload</a>
+            <a href="{{ url_for('analyze') }}" class="nav-link {% if request.endpoint == 'analyze' %}active{% endif %}">Analyze</a>
+            <a href="{{ url_for('graph_view') }}" class="nav-link {% if request.endpoint == 'graph_view' %}active{% endif %}">Graph</a>
+        </div>
+    </nav>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">
+                        <i class="fa-solid fa-info-circle"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const flashes = document.querySelectorAll('.flash-message');
+            flashes.forEach(flash => {
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 300);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>

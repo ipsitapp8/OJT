@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex-center" style="justify-content: space-between; margin-bottom: 1rem;">
+    <h1>Interactive Graph</h1>
+    <div class="gap-2" style="display: flex; align-items: center;">
+        <select id="source-node" class="btn btn-secondary" style="padding: 0.5rem;">
+            <option value="">Source Node</option>
+        </select>
+        <i class="fa-solid fa-arrow-right" style="color: var(--text-secondary)"></i>
+        <select id="target-node" class="btn btn-secondary" style="padding: 0.5rem;">
+            <option value="">Target Node</option>
+        </select>
+        <button onclick="findShortestPath()" class="btn btn-primary">
+            <i class="fa-solid fa-route"></i> Find Path
+        </button>
+    </div>
+</div>
+
+<div id="graph-container"></div>
+
+<div id="path-result" class="card mt-4" style="display: none;">
+    <h3>Shortest Path Result</h3>
+    <p id="path-text" style="color: var(--accent-color); font-size: 1.1rem;"></p>
+</div>
+
+<div id="node-details" class="card mt-4"
+    style="display: none; transition: all 0.3s ease; max-height: 400px; overflow-y: auto;">
+    <h3 id="detail-title"
+        style="color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; position: sticky; top: 0; background: var(--card-bg); backdrop-filter: blur(16px); z-index: 10;">
+    </h3>
+
+    <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;"><i class="fa-solid fa-heading"></i>
+                Headings</h4>
+            <ul id="detail-headings" style="list-style: none; padding-left: 0.5rem;"></ul>
+        </div>
+        <div>
+            <h4 style="color: var(--text-secondary); margin-bottom: 0.5rem;"><i class="fa-solid fa-link"></i> Outgoing
+                Links</h4>
+            <ul id="detail-links" style="list-style: none; padding-left: 0.5rem;"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    let network = null;
+    let allNodesData = {}; // Map to store node data for quick lookup
+
+    async function initGraph() {
+        try {
+            const response = await fetch("{{ url_for('graph_data') }}");
+            const data = await response.json();
+
+            // Store data for lookup
+            data.nodes.forEach(n => {
+                allNodesData[n.id] = n;
+            });
+
+            // Prepare data for Vis.js
+            const nodes = new vis.DataSet(data.nodes.map(n => ({
+                id: n.id,
+                label: n.label,
+                color: {
+                    background: '#1e293b',
+                    border: '#38bdf8',
+                    highlight: { background: '#38bdf8', border: '#fff' }
+                },
+                font: {
+                    size: 16,
+                    color: '#f8fafc',
+                    face: 'Inter',
+                    strokeWidth: 0,
+                    strokeColor: '#ffffff'
+                },
+                borderWidth: 2,
+                shadow: true
+            })));
+
+            const edges = new vis.DataSet(data.edges.map(e => ({
+                from: e.from,
+                to: e.to,
+                arrows: 'to',
+                color: { color: 'rgba(148, 163, 184, 0.4)', highlight: '#38bdf8', hover: '#38bdf8' },
+                smooth: {
+                    type: 'continuous',
+                    forceDirection: 'none',
+                    roundness: 0.5
+                }
+            })));
+
+            const container = document.getElementById('graph-container');
+            const graphData = { nodes: nodes, edges: edges };
+
+            const options = {
+                nodes: {
+                    shape: 'dot',
+                    size: 20
+                },
+                edges: {
+                    width: 1,
+                    arrows: {
+                        to: { enabled: true, scaleFactor: 0.5 }
+                    }
+                },
+                physics: {
+                    forceAtlas2Based: {
+                        gravitationalConstant: -100,
+                        centralGravity: 0.005,
+                        springLength: 150,
+                        springConstant: 0.1,
+                        damping: 0.9
+                    },
+                    maxVelocity: 30,
+                    minVelocity: 0.1,
+                    solver: 'forceAtlas2Based',
+                    stabilization: {
+                        enabled: true,
+                        iterations: 200,
+                        updateInterval: 25
+                    }
+                },
+                interaction: {
+                    hover: true,
+                    tooltipDelay: 200,
+                    hideEdgesOnDrag: true,
+                    zoomView: true,
+                    dragView: true,
+                    zoomSpeed: 0.05 // 5% zoom speed
+                },
+                layout: {
+                    randomSeed: 2
+                }
+            };
+
+            network = new vis.Network(container, graphData, options);
+
+            // Fixed Zoom / Fit on stabilization
+            network.once("stabilizationIterationsDone", function () {
+                network.fit({
+                    animation: {
+                        duration: 1000,
+                        easingFunction: "easeInOutQuad"
+                    }
+                });
+            });
+
+            // Click Event Handler
+            network.on("click", function (params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    showNodeDetails(nodeId);
+                } else {
+                    hideNodeDetails();
+                }
+            });
+
+            // Populate dropdowns
+            const sortedNodeIds = data.nodes.map(n => n.id).sort();
+            const sourceSelect = document.getElementById('source-node');
+            const targetSelect = document.getElementById('target-node');
+
+            sortedNodeIds.forEach(node => {
+                sourceSelect.add(new Option(node, node));
+                targetSelect.add(new Option(node, node));
+            });
+
+        } catch (error) {
+            console.error("Error initializing graph:", error);
+        }
+    }
+
+    function showNodeDetails(nodeId) {
+        const data = allNodesData[nodeId];
+        if (!data) return;
+
+        document.getElementById('detail-title').innerText = data.label;
+
+        const headingsList = document.getElementById('detail-headings');
+        headingsList.innerHTML = '';
+        if (data.headings && data.headings.length > 0) {
+            data.headings.forEach(h => {
+                const li = document.createElement('li');
+                li.innerText = h.replace(/^#+\s/, ''); // Remove markdown hashes
+                li.style.padding = '0.2rem 0';
+                li.style.borderBottom = '1px solid rgba(148, 163, 184, 0.1)';
+                headingsList.appendChild(li);
+            });
+        } else {
+            headingsList.innerHTML = '<li style="color: var(--text-secondary); font-style: italic;">No headings</li>';
+        }
+
+        const linksList = document.getElementById('detail-links');
+        linksList.innerHTML = '';
+        if (data.links && data.links.length > 0) {
+            data.links.forEach(l => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fa-solid fa-arrow-right" style="font-size: 0.8em; color: var(--accent-color);"></i> ${l}`;
+                li.style.padding = '0.2rem 0';
+                linksList.appendChild(li);
+            });
+        } else {
+            linksList.innerHTML = '<li style="color: var(--text-secondary); font-style: italic;">No outgoing links</li>';
+        }
+
+        document.getElementById('node-details').style.display = 'block';
+
+        // Smooth scroll to details
+        document.getElementById('node-details').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideNodeDetails() {
+        document.getElementById('node-details').style.display = 'none';
+    }
+
+    async function findShortestPath() {
+        const source = document.getElementById('source-node').value;
+        const target = document.getElementById('target-node').value;
+
+        if (!source || !target) {
+            alert("Please select both source and target nodes.");
+            return;
+        }
+
+        try {
+            const response = await fetch("{{ url_for('shortest_path') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ source, target })
+            });
+
+            const data = await response.json();
+            const resultDiv = document.getElementById('path-result');
+            const resultText = document.getElementById('path-text');
+
+            if (response.ok) {
+                resultDiv.style.display = 'block';
+                resultText.innerHTML = data.path.join(' <i class="fa-solid fa-arrow-right" style="font-size: 0.8em; margin: 0 5px;"></i> ');
+
+                // Highlight path on graph
+                network.fit({
+                    nodes: data.path,
+                    animation: true
+                });
+
+                network.selectNodes(data.path);
+
+            } else {
+                resultDiv.style.display = 'block';
+                resultText.innerText = data.error || "Error finding path.";
+                resultText.style.color = 'var(--danger)';
+            }
+
+        } catch (error) {
+            console.error("Error finding path:", error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initGraph);
+</script>
+{% endblock %}

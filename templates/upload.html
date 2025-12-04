@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 2rem auto;">
+    <h2 class="text-center mb-4">Upload Your Notes</h2>
+
+    <form action="{{ url_for('upload_notes') }}" method="post" enctype="multipart/form-data" id="upload-form">
+        <div class="upload-area" id="drop-zone">
+            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+            <h3>Drag & Drop Files or Folders</h3>
+            <p style="color: var(--text-secondary)">or select below</p>
+
+            <div class="flex-center gap-2 mt-4">
+                <label class="btn btn-secondary">
+                    <i class="fa-solid fa-file"></i> Select Files
+                    <input type="file" name="files" multiple accept=".md" id="file-input" style="display: none;">
+                </label>
+                <label class="btn btn-secondary">
+                    <i class="fa-solid fa-folder"></i> Select Folder
+                    <input type="file" name="folder_files" webkitdirectory directory multiple id="folder-input"
+                        style="display: none;">
+                </label>
+            </div>
+        </div>
+
+        <div id="file-list" class="mt-4" style="color: var(--text-secondary); text-align: center;"></div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-play"></i> Start Analysis
+            </button>
+        </div>
+    </form>
+
+    <div class="text-center mt-4">
+        <form action="{{ url_for('reset_notes') }}" method="post"
+            onsubmit="return confirm('Are you sure you want to delete all uploaded notes? This cannot be undone.');">
+            <button type="submit" class="btn btn-secondary" style="color: var(--danger); border-color: var(--danger);">
+                <i class="fa-solid fa-trash"></i> Reset / Clear All Data
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const folderInput = document.getElementById('folder-input');
+    const fileList = document.getElementById('file-list');
+
+    // Handle drag and drop (simple version)
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        // Note: Standard drop only gives files, not full directory structure easily without webkitGetAsEntry
+        // For now we just assign to fileInput
+        fileInput.files = e.dataTransfer.files;
+        updateFileList(fileInput);
+    });
+
+    fileInput.addEventListener('change', () => updateFileList(fileInput));
+    folderInput.addEventListener('change', () => updateFileList(folderInput));
+
+    function updateFileList(input) {
+        if (input.files.length > 0) {
+            fileList.innerHTML = `<p>${input.files.length} files selected</p>`;
+        } else {
+            fileList.innerHTML = '';
+        }
+    }
+</script>
+{% endblock %}
