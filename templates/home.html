@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>Visualize Your Knowledge</h1>
+    <p>Transform your Markdown notes into an interactive knowledge graph. Discover connections, identify gaps, and gain
+        new insights.</p>
+
+    <div class="flex-center gap-2">
+        <a href="{{ url_for('upload_notes') }}" class="btn btn-primary">
+            <i class="fa-solid fa-upload"></i> Upload Notes
+        </a>
+        <a href="https://github.com" target="_blank" class="btn btn-secondary">
+            <i class="fa-brands fa-github"></i> View on GitHub
+        </a>
+    </div>
+</div>
+
+<div class="dashboard-grid mt-4">
+    <div class="card">
+        <div class="stat-card">
+            <i class="fa-solid fa-project-diagram fa-2x" style="color: var(--accent-color)"></i>
+            <h3>Interactive Graph</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Explore your notes with a dynamic,
+                force-directed graph visualization.</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="stat-card">
+            <i class="fa-solid fa-chart-pie fa-2x" style="color: var(--warning)"></i>
+            <h3>Deep Analytics</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Identify orphan pages, hubs, and analyze
+                connectivity metrics.</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="stat-card">
+            <i class="fa-solid fa-history fa-2x" style="color: var(--success)"></i>
+            <h3>Track Growth</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Take snapshots and visualize how your knowledge
+                base grows over time.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
