@@ -407,8 +407,8 @@ Bootstrap for the responsive interface
 For feedback, contributions, or issues, please contact:
 
 Your Name
-GitHub: https://github.com/yourusername
-Email: youremail@example.com
+GitHub: https://github.com/ipsitapp8
+Email: ipsitapp8@gmail.com
 
 yaml
 Copy code
